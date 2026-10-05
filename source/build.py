@@ -39,6 +39,7 @@ LOCALE = {"en": "en_US", "hr": "hr_HR"}
 PAGES = {
     "home":    {"en": "/",         "hr": "/hr/"},
     "skipper": {"en": "/skipper/", "hr": "/hr/skiper/"},
+    "booking": {"en": "/booking/", "hr": "/hr/najam-broda/"},
     "about":   {"en": "/about/",   "hr": "/hr/o-meni/"},
     "blog":    {"en": "/blog/",    "hr": "/hr/blog/"},
 }
@@ -53,7 +54,8 @@ MONTHS_EN = ["January", "February", "March", "April", "May", "June", "July", "Au
 
 T = {
     "en": {
-        "skip": "Skip to content", "skipper": "Skipper", "about": "About", "blog": "Blog",
+        "skip": "Skip to content", "skipper": "Skipper", "booking": "Booking", "info": "Info", "about": "About", "blog": "Blog",
+        "ask": "Ask availability",
         "other": "Hrvatski", "other_lang": "hr", "home": "Home",
         "read": "min read", "short": "Short answer", "by": "Written by",
         "author_bio": "Skipper on sailboats and catamarans in Croatia since 2020, ISIA ski instructor and web developer from Zagreb.",
@@ -66,7 +68,8 @@ T = {
         "base_v": "Zagreb, Croatia", "write": "Send an email",
     },
     "hr": {
-        "skip": "Preskoči na sadržaj", "skipper": "Skiper", "about": "O meni", "blog": "Blog",
+        "skip": "Preskoči na sadržaj", "skipper": "Skiper", "booking": "Najam broda", "info": "Info", "about": "O meni", "blog": "Blog",
+        "ask": "Provjeri dostupnost",
         "other": "English", "other_lang": "en", "home": "Početna",
         "read": "min čitanja", "short": "Ukratko", "by": "Autor",
         "author_bio": "Skiper na jedrilicama i katamaranima u Hrvatskoj od 2020., ISIA instruktor skijanja i web developer iz Zagreba.",
@@ -210,7 +213,7 @@ def head(lang, path, alt, title, desc, ld, og_type="website", og_image="/assets/
 <meta property="og:locale" content="{LOCALE[lang]}">{oga}
 <meta name="twitter:card" content="summary_large_image">
 {extra_meta}
-<meta name="theme-color" content="#0F2D40">
+<meta name="theme-color" content="#062B3F">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="alternate" type="application/rss+xml" title="{NAME} — Blog ({lang.upper()})" href="{feed}">
@@ -222,17 +225,50 @@ def head(lang, path, alt, title, desc, ld, og_type="website", og_image="/assets/
 <a class="skip" href="#main">{T[lang]["skip"]}</a>
 """
 
+LOGO = ('<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#0E8FA3"/>'
+        '<path d="M30 10 L30 46 L12 46 Z" fill="#F4FAFB"/><path d="M34 16 L34 46 L50 46 Z" fill="#F2A900"/>'
+        '<path d="M10 50 H54 L48 56 H16 Z" fill="#F4FAFB"/></svg>')
+
+ICON_HELM = ('<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">'
+             '<circle cx="24" cy="24" r="9"/><circle cx="24" cy="24" r="3"/><path d="M24 4v11M24 33v11M4 24h11M33 24h11M10 10l8 8M30 30l8 8M38 10l-8 8M18 30l-8 8"/></svg>')
+ICON_BOAT = ('<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+             '<path d="M23 6v28H8Z"/><path d="M27 12v22h13Z"/><path d="M5 38h38l-5 6H10Z"/></svg>')
+ICON_COMPASS = ('<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+                '<circle cx="24" cy="24" r="18"/><path d="M31 17l-4 10-10 4 4-10Z"/><circle cx="24" cy="24" r="1.5" fill="currentColor"/></svg>')
+
+def photo_files(sub):
+    d = ROOT / "static" / "photos" / sub
+    return sorted(d.glob("*.jpg")) + sorted(d.glob("*.jpeg")) + sorted(d.glob("*.png")) + sorted(d.glob("*.webp")) if d.exists() else []
+
+def has_hero_photo():
+    return any((ROOT / "static" / "photos" / n).exists() for n in ("hero.jpg", "hero.jpeg", "hero.png", "hero.webp"))
+
+def hero(h1, lede="", actions="", kicker="", role="", side="", trust=None, compact=False, h1_attr=""):
+    photo = ' has-photo" style="--hero-img:url(/assets/photos/hero.jpg)' if has_hero_photo() else ""
+    cls = "hero-band" + (" compact" if compact else "")
+    trust_html = ('<ul class="trust">' + "".join(f"<li>{x}</li>" for x in trust) + "</ul>") if trust else ""
+    return f"""<section class="{cls}{photo}"><div class="wrap{' has-side' if side else ''}">
+<div>{f'<p class="kicker">{kicker}</p>' if kicker else ''}<h1{h1_attr}>{h1}</h1>{f'<p class="role">{role}</p>' if role else ''}{f'<p class="lede">{lede}</p>' if lede else ''}{f'<div class="actions">{actions}</div>' if actions else ''}{trust_html}</div>
+{side}
+</div><div class="waves" aria-hidden="true"></div></section>"""
+
+def portrait_side(lang):
+    src = "/assets/photos/ivor.jpg" if (ROOT / "static" / "photos" / "ivor.jpg").exists() else "/assets/ivor-benko.jpg"
+    badge = "Skipper since 2020" if lang == "en" else "Skiper od 2020."
+    return f'<div class="hero-portrait"><img src="{src}" width="480" height="480" alt="{NAME}"><span class="badge">{badge}</span></div>'
+
 def header(lang, current, alt):
     t = T[lang]
     def nav(key):
         cur = ' aria-current="page"' if key == current else ""
-        return f'<a href="{PAGES[key][lang]}"{cur}>{t[key]}</a>'
+        label = t["info"] if key == "blog" else t[key]
+        return f'<a href="{PAGES[key][lang]}"{cur}>{label}</a>'
     other = t["other_lang"]
     switch = f'<a class="lang" href="{alt[other]}" hreflang="{other}" lang="{other}">{t["other"]}</a>' if other in alt else ""
     return f"""<header class="site-head"><div class="wrap">
-<a class="brand" href="{PAGES['home'][lang]}">{NAME}</a>
-<nav class="nav" aria-label="{'Glavna navigacija' if lang == 'hr' else 'Main navigation'}">{nav('skipper')}{nav('about')}{nav('blog')}</nav>
-{switch}
+<a class="brand" href="{PAGES['home'][lang]}">{LOGO}{NAME}</a>
+<nav class="nav" aria-label="{'Glavna navigacija' if lang == 'hr' else 'Main navigation'}">{nav('skipper')}{nav('booking')}{nav('blog')}{nav('about')}</nav>
+{switch}<a class="nav-cta" href="{PAGES['booking'][lang]}#{'contact' if lang == 'en' else 'kontakt'}">{t['ask']}</a>
 </div></header>
 <main id="main">
 """
@@ -243,24 +279,30 @@ def footer(lang):
     social = "".join(f'<p><a href="{u}" rel="me">{esc(u.split("//")[-1].split("/")[0].replace("www.", ""))}</a></p>' for u in SAME_AS)
     return f"""</main>
 <footer class="site-foot"><div class="wrap">
-<div><p><strong>{NAME}</strong></p><p>{t['foot_role']}</p><p>{t['base_v']}</p></div>
+<div><p class="foot-brand">{NAME}</p><p>{t['foot_role']}</p><p>{t['base_v']}</p></div>
 <div><p><strong>{t['foot_contact']}</strong></p><p><a href="mailto:{EMAIL}">{EMAIL}</a></p><p><a href="tel:{PHONE_E164}">{PHONE}</a></p>{wa}{social}</div>
-<div><p><strong>{t['foot_pages']}</strong></p><p><a href="{PAGES['skipper'][lang]}">{t['skipper']}</a></p><p><a href="{PAGES['about'][lang]}">{t['about']}</a></p><p><a href="{PAGES['blog'][lang]}">{t['blog']}</a></p></div>
+<div><p><strong>{t['foot_pages']}</strong></p><p><a href="{PAGES['skipper'][lang]}">{t['skipper']}</a></p><p><a href="{PAGES['booking'][lang]}">{t['booking']}</a></p><p><a href="{PAGES['blog'][lang]}">{t['info']}</a></p><p><a href="{PAGES['about'][lang]}">{t['about']}</a></p></div>
 </div></footer>
 </body>
 </html>
 """
 
-def contact_block(lang, anchor):
+def contact_block(lang, anchor, kind="skipper"):
     t = T[lang]
     copy = {
-        "en": ("Planning a week at sea?", "Tell me your dates, the boat or charter company if you already have one, how many of you there are and what kind of week you'd like. I'll reply with my availability."),
-        "hr": ("Planirate tjedan na moru?", "Javite mi termin, brod ili charter tvrtku ako ih već imate, koliko vas je i kakav tjedan želite. Odgovorit ću vam s dostupnošću."),
-    }[lang]
+        ("en", "skipper"): ("Planning a week at sea?", "Tell me your dates, the boat or charter company if you already have one, how many of you there are and what kind of week you'd like. I'll reply with my availability."),
+        ("hr", "skipper"): ("Planirate tjedan na moru?", "Javite mi termin, brod ili charter tvrtku ako ih već imate, koliko vas je i kakav tjedan želite. Odgovorit ću vam s dostupnošću."),
+        ("en", "booking"): ("Let's find your boat", "Tell me your dates, how many of you there are, how many cabins you need and what kind of week you'd like. I'll come back with boat and route suggestions."),
+        ("hr", "booking"): ("Pronađimo vaš brod", "Javite mi termin, koliko vas je, koliko kabina trebate i kakav tjedan želite. Javit ću vam se s prijedlozima broda i rute."),
+    }[(lang, kind)]
     wa = f'<dt>{t["whatsapp"]}</dt><dd><a href="https://wa.me/{PHONE_E164[1:]}">{PHONE}</a></dd>' if WHATSAPP else ""
-    subject = "Skipper%20enquiry" if lang == "en" else "Upit%20za%20skipera"
+    if kind == "booking":
+        subject = "Booking%20enquiry" if lang == "en" else "Upit%20za%20najam%20broda"
+    else:
+        subject = "Skipper%20enquiry" if lang == "en" else "Upit%20za%20skipera"
+    src = "/assets/photos/ivor.jpg" if (ROOT / "static" / "photos" / "ivor.jpg").exists() else "/assets/ivor-benko.jpg"
     return f"""<section class="section" id="{anchor}" aria-labelledby="{anchor}-h"><div class="contact">
-<img class="portrait" src="/assets/ivor-benko.jpg" width="240" height="240" alt="{NAME}" loading="lazy">
+<img class="portrait" src="{src}" width="240" height="240" alt="{NAME}" loading="lazy">
 <div><h2 id="{anchor}-h">{copy[0]}</h2><p>{copy[1]}</p>
 <dl class="kv"><dt>{t['email']}</dt><dd><a href="mailto:{EMAIL}">{EMAIL}</a></dd>
 <dt>{t['phone']}</dt><dd><a href="tel:{PHONE_E164}">{PHONE}</a></dd>{wa}
@@ -269,10 +311,19 @@ def contact_block(lang, anchor):
 </div></section>"""
 
 def post_list(lang, posts):
-    items = "".join(f'<li><a href="{p["path"]}"><time datetime="{p["date"]}">{fmt_date(p["date"], lang)}</time>'
-                    f'<span><span class="t">{esc(p["title"])}</span><span class="s">{esc(p["description"])}</span></span></a></li>'
+    """Card grid of posts."""
+    items = "".join(f'<li><a class="card" href="{p["path"]}"><span class="card-top"><span>{esc(CATEGORIES[p["category"]][lang])}</span></span>'
+                    f'<span class="card-body"><span class="t">{esc(p["title"])}</span><span class="s">{esc(p["description"])}</span>'
+                    f'<time datetime="{p["date"]}">{fmt_date(p["date"], lang)}</time></span></a></li>'
                     for p in posts)
-    return f'<ul class="posts">{items}</ul>'
+    return f'<ul class="cards">{items}</ul>'
+
+def gallery_html():
+    files = photo_files("gallery")
+    if not files: return ""
+    items = "".join(f'<li><img src="/assets/photos/gallery/{f.stem}.jpg" alt="" loading="lazy"></li>' for f in files)
+    return f'<ul class="gallery">{items}</ul>'
+
 
 # ---------------------------------------------------------------- the chart (hero)
 def chart_svg(lang):
@@ -339,7 +390,7 @@ def page_home(lang):
     t = T[lang]; path = PAGES["home"][lang]; alt = PAGES["home"]
     if lang == "en":
         title = "Ivor Benko — Skipper on sailboats and catamarans in Croatia"
-        desc = "Ivor Benko is a skipper from Zagreb who has captained sailboats and catamarans in the Croatian Adriatic since 2020. Private skipper for charters, sailing blog, skiing and web."
+        desc = "Ivor Benko is a skipper from Zagreb who has captained sailboats and catamarans in the Croatian Adriatic since 2020. Private skipper for charters, boat booking help, sailing info, skiing and web."
         role = "Skipper on sailboats and catamarans in the Croatian Adriatic"
         lede = "I plan the route around the weather, handle the marinas and anchorages, and make sure everyone on board has a good week at sea."
         cta1, cta2 = "Ask about availability", "Read the sailing blog"
@@ -357,7 +408,7 @@ def page_home(lang):
                "<div><h3>Websites and apps</h3><p>I also build websites and apps, including this one. Write to me if you need one.</p></div>")
     else:
         title = "Ivor Benko — skiper na jedrilicama i katamaranima u Hrvatskoj"
-        desc = "Ivor Benko je skiper iz Zagreba koji od 2020. vodi jedrilice i katamarane po hrvatskom Jadranu. Privatni skiper za chartere, blog o jedrenju, skijanje i web."
+        desc = "Ivor Benko je skiper iz Zagreba koji od 2020. vodi jedrilice i katamarane po hrvatskom Jadranu. Privatni skiper za chartere, pomoć pri najmu broda, info o jedrenju, skijanje i web."
         role = "Skiper na jedrilicama i katamaranima na hrvatskom Jadranu"
         lede = "Planiram rutu prema vremenu, vodim marine i sidrenje i brinem se da svi na brodu imaju dobar tjedan na moru."
         cta1, cta2 = "Provjeri dostupnost", "Čitaj blog o jedrenju"
@@ -379,22 +430,45 @@ def page_home(lang):
     facts_html = "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in facts)
     fleet = (f'<div class="fleet"><div><h3>{fleet_h[0]}</h3><ul>{"".join(f"<li>{b}</li>" for b in SAILBOATS)}</ul></div>'
              f'<div><h3>{fleet_h[1]}</h3><ul>{"".join(f"<li>{b}</li>" for b in CATAMARANS)}</ul></div></div>')
-    body = f"""<div class="wrap">
-<section class="hero">
-<div><h1>{NAME}</h1><p class="role">{role}</p><p class="lede">{lede}</p>
-<div class="actions"><a class="btn" href="{PAGES['skipper'][lang]}#{anchor}">{cta1}</a><a class="textlink" href="{PAGES['blog'][lang]}">{cta2}</a></div></div>
-<figure class="chart" style="margin:0">{chart_svg(lang)}<figcaption>{cap}</figcaption></figure>
-</section>
-<dl class="facts">{facts_html}</dl>
-<section class="section split" aria-labelledby="onboard">
-<div><h2 id="onboard">{on_board_h}</h2></div>
-<div class="prose">{on_board}<p><a class="textlink" href="{PAGES['skipper'][lang]}">{more}</a></p>{fleet}</div>
-</section>
-<section class="section" aria-labelledby="blog-h"><div class="section-head"><h2 id="blog-h">{blog_h}</h2><a class="textlink" href="{PAGES['blog'][lang]}">{t['all_posts']}</a></div>
-{post_list(lang, POSTS[lang][:4])}</section>
-<section class="section split" aria-labelledby="off-h"><div><h2 id="off-h">{off_h}</h2></div><div class="fleet" style="margin:0">{off}</div></section>
-{contact_block(lang, anchor)}
-</div>"""
+    C = {
+        "en": dict(kick="Skipper · Boat booking · Sailing info", trust=["Skipper since 2020", "Croatian · English · German", "Kornati, Dalmatia, Istria", "Sailboats and catamarans"],
+                   choices=[("skipper", ICON_HELM, "Hire a skipper", "Book the boat with any charter company and I'll skipper it. Route, marinas, anchorages and check-in handled.", "See how it works"),
+                            ("booking", ICON_BOAT, "Book a boat", "Not sure which boat or base? I'll help you choose between sailboat and catamaran and plan the week.", "Find your boat"),
+                            ("blog", ICON_COMPASS, "Sailing info", "Winds, bays, marines and packing lists, written by a skipper for guests and fellow skippers.", "Read the guides")],
+                   chart_h="A week around the Kornati", info_h="Info for guests and skippers", info_sub="Practical notes from the water.", gal_h="On the water"),
+        "hr": dict(kick="Skiper · Najam broda · Info o jedrenju", trust=["Skiper od 2020.", "Hrvatski · engleski · njemački", "Kornati, Dalmacija, Istra", "Jedrilice i katamarani"],
+                   choices=[("skipper", ICON_HELM, "Unajmi skipera", "Rezerviraj brod kod bilo koje charter tvrtke, a ja ću ga voditi. Ruta, marine, sidrišta i preuzimanje broda riješeni.", "Kako to funkcionira"),
+                            ("booking", ICON_BOAT, "Najam broda", "Ne znaš koji brod ili bazu? Pomoći ću ti odabrati između jedrilice i katamarana i složiti tjedan.", "Pronađi brod"),
+                            ("blog", ICON_COMPASS, "Info o jedrenju", "Vjetrovi, uvale, marine i popisi stvari, od skipera za goste i kolege skipere.", "Čitaj vodiče")],
+                   chart_h="Tjedan oko Kornata", info_h="Info za goste i skipere", info_sub="Praktične bilješke s mora.", gal_h="Na moru"),
+    }[lang]
+    choices_html = "".join(
+        f'<a class="choice c{i + 1}" href="{PAGES[k][lang]}">{ic}<h2>{h}</h2><p>{tx}</p><span class="go">{go}</span></a>'
+        for i, (k, ic, h, tx, go) in enumerate(C["choices"]))
+    actions = (f'<a class="btn" href="{PAGES["skipper"][lang]}">{t["skipper"]}</a>'
+               f'<a class="btn btn-ghost" href="{PAGES["booking"][lang]}">{t["booking"]}</a>')
+    gal = gallery_html()
+    gal_sec = f'<section class="band band-foam"><div class="wrap"><div class="section-head"><h2>{C["gal_h"]}</h2></div>{gal}</div></section>' if gal else ""
+    body = f"""{hero(NAME, lede, actions, kicker=C['kick'], role=role, side=portrait_side(lang), trust=C['trust'])}
+<div class="wrap">
+<div class="choices">{choices_html}</div>
+</div>
+<section class="band band-foam" aria-labelledby="onboard"><div class="wrap">
+<div class="split">
+<div><p class="kicker">{'Skipper' if lang == 'en' else 'Skiper'}</p><h2 id="onboard">{on_board_h}</h2><div class="prose">{on_board}<p><a class="textlink" href="{PAGES['skipper'][lang]}">{more} →</a></p></div></div>
+<div><figure class="chart">{chart_svg(lang)}<figcaption>{cap}</figcaption></figure></div>
+</div>
+<dl class="stats" style="margin-top:3rem">{facts_html}</dl>
+</div></section>
+<section class="band band-white wave-top" aria-labelledby="fleet-h"><div class="wrap">
+<div class="section-head"><h2 id="fleet-h">{'Boats' if lang == 'en' else 'Brodovi'}</h2><a class="textlink" href="{PAGES['booking'][lang]}">{t['booking']} →</a></div>
+{fleet}</div></section>
+{gal_sec}
+<section class="band band-shallow wave-top" aria-labelledby="blog-h"><div class="wrap">
+<div class="section-head"><div><p class="kicker">Info</p><h2 id="blog-h">{C['info_h']}</h2></div><a class="textlink" href="{PAGES['blog'][lang]}">{t['all_posts']} →</a></div>
+{post_list(lang, POSTS[lang][:3])}</div></section>
+<section class="band band-foam wave-top" aria-labelledby="off-h"><div class="wrap split"><div><h2 id="off-h">{off_h}</h2></div><div class="fleet" style="margin:0">{off}</div></div></section>
+<div class="band band-foam" style="padding-top:0"><div class="wrap">{contact_block(lang, anchor)}</div></div>"""
     return path, head(lang, path, alt, title, desc, ld) + header(lang, "home", alt) + body + footer(lang)
 
 def page_skipper(lang):
@@ -476,17 +550,113 @@ def page_skipper(lang):
     faq_html = "".join(f"<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>" for q, a in faq)
     faq_html = faq_html.replace(esc("blog post on whether you need a skipper."), f'<a href="{blog_link}">blog post on whether you need a skipper</a>.') \
                        .replace("pisao sam na blogu.", f'<a href="{blog_link}">pisao sam na blogu</a>.')
-    body = f"""<div class="wrap">
-<section class="hero" style="grid-template-columns:1fr"><div><h1 style="max-width:52rem">{h1}</h1><p class="lede">{lede}</p>
-<div class="actions"><a class="btn" href="#{anchor}">{'Ask about availability' if lang == 'en' else 'Provjeri dostupnost'}</a></div></div></section>
-<section class="section split"><div><h2>{does_h}</h2></div><div class="prose"><ul>{''.join(f'<li>{d}</li>' for d in does)}</ul></div></section>
-<section class="section split"><div><h2>{area_h}</h2></div><div class="prose">{area}</div></section>
-<section class="section split"><div><h2>{steps_h}</h2></div><ol class="steps">{''.join(f'<li><span><strong>{a}</strong>{b}</span></li>' for a, b in steps)}</ol></section>
-<section class="section split"><div><h2>{qual_h}</h2></div><dl class="kv">{''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k, v in qual)}</dl></section>
-<section class="section split"><div><h2>{faq_h}</h2></div><div class="faq">{faq_html}</div></section>
-{contact_block(lang, anchor)}
-</div>"""
+    ask = 'Ask about availability' if lang == 'en' else 'Provjeri dostupnost'
+    other_btn = (f'<a class="btn btn-ghost" href="{PAGES["booking"][lang]}">{t["booking"]}</a>')
+    kick = "Private skipper" if lang == "en" else "Privatni skiper"
+    trust = (["Skipper since 2020", "Sailboats and catamarans", "Croatian · English · German"] if lang == "en"
+             else ["Skiper od 2020.", "Jedrilice i katamarani", "Hrvatski · engleski · njemački"])
+    body = f"""{hero(h1, lede, f'<a class="btn" href="#{anchor}">{ask}</a>{other_btn}', kicker=kick, trust=trust, compact=True)}
+<section class="band band-foam" aria-labelledby="does-h"><div class="wrap">
+<div class="section-head"><h2 id="does-h">{does_h}</h2></div>
+<ul class="features">{''.join(f'<li>{d}</li>' for d in does)}</ul>
+</div></section>
+<section class="band band-white wave-top"><div class="wrap split">
+<div><h2>{area_h}</h2><div class="prose">{area}</div></div>
+<div><h2>{steps_h}</h2><ol class="steps">{''.join(f'<li><span><strong>{a}</strong>{b}</span></li>' for a, b in steps)}</ol></div>
+</div></section>
+<section class="band band-shallow wave-top"><div class="wrap split"><div><h2>{qual_h}</h2></div><dl class="kv">{''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k, v in qual)}</dl></div></section>
+<section class="band band-foam wave-top"><div class="wrap split"><div><h2>{faq_h}</h2></div><div class="faq">{faq_html}</div></div></section>
+<div class="band band-foam" style="padding-top:0"><div class="wrap">{contact_block(lang, anchor)}</div></div>"""
     return path, head(lang, path, alt, title, desc, ld) + header(lang, "skipper", alt) + body + footer(lang)
+
+def post_link(lang, key):
+    return next(p["path"] for p in POSTS[lang] if p["key"] == key)
+
+def page_booking(lang):
+    t = T[lang]; path = PAGES["booking"][lang]; alt = PAGES["booking"]
+    anchor = "contact" if lang == "en" else "kontakt"
+    cat_link, skip_link, pack_link = (post_link(lang, k) for k in ("cat-vs-mono", "skipper-needed", "packing"))
+    if lang == "en":
+        title = "Book a sailboat or catamaran in Croatia — with a skipper who helps you choose — Ivor Benko"
+        desc = "Looking to charter a sailboat or catamaran in Croatia? Ivor Benko helps you choose the boat, the base and the route, and can skipper the week as well."
+        h1 = "Book a boat in Croatia, and sail it with someone who knows the coast"
+        lede = "Tell me when you want to go, how many of you there are and what kind of week you imagine. I'll help you choose the boat and the route, and I can skipper it too."
+        kick = "Boat booking"
+        why_h = "What I help you with"
+        why = ["<strong>Choosing the boat.</strong> Sailboat or catamaran, how many cabins, which size fits your group and your budget.",
+               "<strong>Choosing the base and the area.</strong> Where to start and finish so the week suits the wind, the season and what you want to see.",
+               "<strong>A realistic route.</strong> Distances, bays and marinas planned around the forecast, not around a brochure.",
+               "<strong>Skipper on board, if you want one.</strong> The same person who helped you choose the boat can take you out on it."]
+        cmp_h = "Sailboat or catamaran?"
+        cmp = [("Sailboat", ["Feels more like sailing, with heel and speed under sail", "Usually the lower price", "Smaller cabins and less deck space", "A good choice for sailing lovers and smaller groups"]),
+               ("Catamaran", ["Spacious and stable, with a big shared cockpit and deck", "Cabins are similar in size and often have their own bathrooms", "Usually the higher price", "A good choice for families and groups who want space"])]
+        cmp_more = "Read the full comparison"
+        steps_h = "How booking works"
+        steps = [("Send me your plans", "Dates, number of guests and cabins, area, and a rough budget if you have one."),
+                 ("I suggest options", "A few boats and bases that fit your group, with a first idea of the route."),
+                 ("You choose", "We go through the options together until you're happy with the boat."),
+                 ("Booking is confirmed", "The reservation itself is made with the charter company. I help you with the details."),
+                 ("Skipper or not", "Choose a skipper if you'd like one. I'm happy to be on board, or you can sail it yourselves.")]
+        faq_h = "Questions about booking"
+        faq = [("When is the best time to sail in Croatia?", "July and August are the hottest and busiest months. June and September are often milder with fewer boats, and the sea is still warm for swimming. I'm happy to advise on what suits your group."),
+               ("How early should I book?", "As early as you can, especially for July and August, because the most popular boats and bases fill up first."),
+               ("Do I need a skipper?", "If nobody in your group holds a boat licence recognised in Croatia and a VHF radio certificate, yes. Many groups with licences hire one anyway. I wrote about it in the blog post on whether you need a skipper."),
+               ("Sailboat or catamaran, which should I take?", "It depends on your group and what you want from the week. The comparison above is a start, and I'm glad to give you a recommendation if you tell me about your group."),
+               ("Can you help me prepare for the trip?", "Yes. I wrote a packing list for a week of sailing in Croatia, and I'm happy to answer questions before you arrive.")]
+        faq_pre = {"blog post on whether you need a skipper.": f'<a href="{skip_link}">blog post on whether you need a skipper</a>.',
+                   "I wrote a packing list for a week of sailing in Croatia": f'I wrote a <a href="{pack_link}">packing list for a week of sailing in Croatia</a>'}
+    else:
+        title = "Najam jedrilice ili katamarana u Hrvatskoj, uz skipera koji pomaže pri odabiru — Ivor Benko"
+        desc = "Želite unajmiti jedrilicu ili katamaran u Hrvatskoj? Ivor Benko pomaže pri odabiru broda, baze i rute, a može biti i vaš skiper."
+        h1 = "Najam broda u Hrvatskoj, uz nekoga tko poznaje obalu"
+        lede = "Javite mi kada želite ići, koliko vas je i kakav tjedan zamišljate. Pomoći ću vam odabrati brod i rutu, a mogu biti i vaš skiper."
+        kick = "Najam broda"
+        why_h = "S čime vam pomažem"
+        why = ["<strong>Odabir broda.</strong> Jedrilica ili katamaran, koliko kabina, koja veličina odgovara vašoj grupi i budžetu.",
+               "<strong>Odabir baze i područja.</strong> Odakle krenuti i gdje završiti da tjedan odgovara vjetru, sezoni i onome što želite vidjeti.",
+               "<strong>Realna ruta.</strong> Udaljenosti, uvale i marine složene prema prognozi, a ne prema brošuri.",
+               "<strong>Skiper na brodu, ako želite.</strong> Isti čovjek koji vam je pomogao odabrati brod može vas voditi na njemu."]
+        cmp_h = "Jedrilica ili katamaran?"
+        cmp = [("Jedrilica", ["Više osjećaj pravog jedrenja, s nagibom i brzinom pod jedrima", "Obično niža cijena", "Manje kabine i manje prostora na palubi", "Dobar izbor za ljubitelje jedrenja i manje grupe"]),
+               ("Katamaran", ["Prostran i stabilan, s velikim zajedničkim kokpitom i palubom", "Kabine su slične veličine i često imaju vlastite kupaonice", "Obično viša cijena", "Dobar izbor za obitelji i grupe koje žele prostor"])]
+        cmp_more = "Pročitaj cijelu usporedbu"
+        steps_h = "Kako funkcionira najam"
+        steps = [("Pošaljite mi planove", "Termin, broj gostiju i kabina, područje i okvirni budžet ako ga imate."),
+                 ("Predlažem opcije", "Nekoliko brodova i baza koje odgovaraju vašoj grupi, s prvom idejom rute."),
+                 ("Vi birate", "Zajedno prolazimo opcije dok niste zadovoljni brodom."),
+                 ("Rezervacija se potvrđuje", "Sama rezervacija radi se s charter tvrtkom. Ja vam pomažem oko detalja."),
+                 ("Skiper ili ne", "Skipera uzmite ako želite. Rado idem s vama, a možete i sami jedriti.")]
+        faq_h = "Pitanja o najmu"
+        faq = [("Kada je najbolje jedriti u Hrvatskoj?", "Srpanj i kolovoz su najtopliji i najprometniji. Lipanj i rujan su često blaži, s manje brodova, a more je i dalje toplo za kupanje. Rado savjetujem što odgovara vašoj grupi."),
+               ("Koliko ranije trebam rezervirati?", "Što ranije možete, posebno za srpanj i kolovoz, jer se najpopularniji brodovi i baze prvi popune."),
+               ("Treba li mi skiper?", "Ako nitko u grupi nema ispit za voditelja brodice priznat u Hrvatskoj i VHF svjedodžbu, da. Mnoge grupe s ispitom ipak unajme skipera. O tome sam pisao na blogu."),
+               ("Jedrilica ili katamaran, što uzeti?", "Ovisi o vašoj grupi i onome što želite od tjedna. Usporedba iznad je početak, a rado ću vam dati preporuku ako mi opišete grupu."),
+               ("Možete li mi pomoći oko pripreme za put?", "Da. Napisao sam popis stvari za tjedan jedrenja u Hrvatskoj i rado odgovaram na pitanja prije dolaska.")]
+        faq_pre = {"O tome sam pisao na blogu.": f'O tome sam <a href="{skip_link}">pisao na blogu</a>.',
+                   "popis stvari za tjedan jedrenja u Hrvatskoj": f'<a href="{pack_link}">popis stvari za tjedan jedrenja u Hrvatskoj</a>'}
+    faq_html = "".join(f"<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>" for q, a in faq)
+    for old, new in faq_pre.items():
+        faq_html = faq_html.replace(esc(old), new)
+    service = {"@type": "Service", "@id": abs_url(path) + "#service", "name": h1, "description": desc,
+               "serviceType": "Yacht charter consulting" if lang == "en" else "Savjetovanje pri najmu broda",
+               "provider": {"@id": SITE + "/#person"}, "areaServed": [{"@type": "Country", "name": "Croatia"}, {"@type": "Place", "name": "Adriatic Sea"}],
+               "availableLanguage": ["hr", "en", "de"], "url": abs_url(path)}
+    faq_ld = {"@type": "FAQPage", "@id": abs_url(path) + "#faq", "mainEntity": [
+        {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}
+    ld = [person(lang), website(), webpage(lang, path, title, desc, extra={"mainEntity": {"@id": abs_url(path) + "#service"}}),
+          service, faq_ld, crumbs_ld([(t["home"], PAGES["home"][lang]), (t["booking"], path)])]
+    ask = "Send me your plans" if lang == "en" else "Pošaljite mi planove"
+    trust = (["Sailboats and catamarans", "Skipper optional", "Croatian · English · German"] if lang == "en"
+             else ["Jedrilice i katamarani", "Skiper po želji", "Hrvatski · engleski · njemački"])
+    cmp_html = "".join(f'<div><h3>{h}</h3><ul>{"".join(f"<li>{i}</li>" for i in items)}</ul></div>' for h, items in cmp)
+    body = f"""{hero(h1, lede, f'<a class="btn" href="#{anchor}">{ask}</a><a class="btn btn-ghost" href="{PAGES["skipper"][lang]}">{t["skipper"]}</a>', kicker=kick, trust=trust, compact=True)}
+<section class="band band-foam" aria-labelledby="why-h"><div class="wrap"><div class="section-head"><h2 id="why-h">{why_h}</h2></div>
+<ul class="features">{''.join(f'<li>{d}</li>' for d in why)}</ul></div></section>
+<section class="band band-white wave-top"><div class="wrap"><div class="section-head"><h2>{cmp_h}</h2><a class="textlink" href="{cat_link}">{cmp_more} →</a></div><div class="compare">{cmp_html}</div></div></section>
+<section class="band band-shallow wave-top"><div class="wrap split"><div><h2>{steps_h}</h2></div><ol class="steps">{''.join(f'<li><span><strong>{a}</strong>{b}</span></li>' for a, b in steps)}</ol></div></section>
+<section class="band band-foam wave-top"><div class="wrap split"><div><h2>{faq_h}</h2></div><div class="faq">{faq_html}</div></div></section>
+<div class="band band-foam" style="padding-top:0"><div class="wrap">{contact_block(lang, anchor, "booking")}</div></div>"""
+    return path, head(lang, path, alt, title, desc, ld) + header(lang, "booking", alt) + body + footer(lang)
 
 def page_about(lang):
     t = T[lang]; path = PAGES["about"][lang]; alt = PAGES["about"]
@@ -539,15 +709,12 @@ def page_about(lang):
                       extra={"mainEntity": {"@id": SITE + "/#person"}, "dateCreated": "2026-09-28"})
     ld = [person(lang), website(), profile, crumbs_ld([(t["home"], PAGES["home"][lang]), (t["about"], path)])]
     exp_html = "".join(f'<li><div class="row"><span class="when">{a}</span><span><span class="t">{b}</span><span class="s">{c}</span></span></div></li>' for a, b, c in exp)
-    body = f"""<div class="wrap">
-<section class="hero"><div><h1>{h1}</h1><p class="lede">{t['author_bio']}</p></div>
-<img class="portrait" style="width:14rem;height:14rem" src="/assets/ivor-benko.jpg" width="240" height="240" alt="{NAME}"></section>
-<section class="section split"><div><h2>{'Quick facts' if lang == 'en' else 'Ukratko'}</h2></div><dl class="kv">{''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k, v in facts)}</dl></section>
-<section class="section split"><div><h2>{'My story' if lang == 'en' else 'Moja priča'}</h2></div><div class="prose">{bio}</div></section>
-<section class="section split"><div><h2>{exp_h}</h2></div><ul class="posts">{exp_html}</ul></section>
-<section class="section split"><div><h2>{skills_h}</h2></div><div class="prose"><p>{skills}</p></div></section>
-{contact_block(lang, anchor)}
-</div>"""
+    body = f"""{hero(h1, t['author_bio'], side=portrait_side(lang), compact=True)}
+<section class="band band-foam"><div class="wrap split"><div><h2>{'Quick facts' if lang == 'en' else 'Ukratko'}</h2></div><dl class="kv">{''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k, v in facts)}</dl></div></section>
+<section class="band band-white wave-top"><div class="wrap split"><div><h2>{'My story' if lang == 'en' else 'Moja priča'}</h2></div><div class="prose">{bio}</div></div></section>
+<section class="band band-shallow wave-top"><div class="wrap split"><div><h2>{exp_h}</h2></div><ul class="posts">{exp_html}</ul></div></section>
+<section class="band band-foam wave-top"><div class="wrap split"><div><h2>{skills_h}</h2></div><div class="prose"><p>{skills}</p></div></div></section>
+<div class="band band-foam" style="padding-top:0"><div class="wrap">{contact_block(lang, anchor)}</div></div>"""
     return path, head(lang, path, alt, title, desc, ld, og_type="profile",
                       extra_meta='<meta property="profile:first_name" content="Ivor"><meta property="profile:last_name" content="Benko">') \
         + header(lang, "about", alt) + body + footer(lang)
@@ -572,7 +739,7 @@ def page_blog(lang):
                "blogPost": [{"@type": "BlogPosting", "headline": p["title"], "url": abs_url(p["path"]), "datePublished": p["date"]} for p in POSTS[lang]]}
     ld = [person(lang), website(), webpage(lang, path, title, desc, typ="CollectionPage", extra={"mainEntity": {"@id": abs_url(path) + "#blog"}}),
           blog_ld, crumbs_ld([(t["home"], PAGES["home"][lang]), (t["blog"], path)])]
-    body = f"""<div class="wrap"><section class="hero" style="grid-template-columns:1fr"><div><h1>{t['blog']}</h1><p class="lede">{intro}</p></div></section>{sections}</div>"""
+    body = f"""{hero('Info', intro, kicker='Sailing' if lang == 'en' else 'Jedrenje', compact=True)}<div class="band band-foam" style="padding-top:0"><div class="wrap" style="padding-bottom:2rem">{sections}</div></div>"""
     return path, head(lang, path, alt, title, desc, ld) + header(lang, "blog", alt) + body + footer(lang)
 
 def page_post(p):
@@ -594,27 +761,24 @@ def page_post(p):
           crumbs_ld([(t["home"], PAGES["home"][lang]), (t["blog"], PAGES["blog"][lang]), (p["title"], path)])]
     more = [q for q in POSTS[lang] if q["key"] != p["key"]][:3]
     trans = f'<p class="translation"><a href="{tw["path"]}" hreflang="{tw["lang"]}" lang="{tw["lang"]}">{T[lang]["translation"]}</a></p>' if tw else ""
-    body = f"""<div class="wrap"><article class="article">
-<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="{PAGES['home'][lang]}">{t['home']}</a></li><li><a href="{PAGES['blog'][lang]}">{t['blog']}</a></li><li aria-current="page">{esc(CATEGORIES[p['category']][lang])}</li></ol></nav>
+    body = f"""<div class="band band-foam article-wrap" style="padding-top:0"><div class="wrap"><article class="article">
+<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="{PAGES['home'][lang]}">{t['home']}</a></li><li><a href="{PAGES['blog'][lang]}">{t['info']}</a></li><li aria-current="page">{esc(CATEGORIES[p['category']][lang])}</li></ol></nav>
 <h1>{esc(p['title'])}</h1>
 <div class="meta"><span><time datetime="{p['date']}">{fmt_date(p['date'], lang)}</time></span><span>{minutes} {t['read']}</span><span>{t['by']} <a href="{PAGES['about'][lang]}" rel="author">{NAME}</a></span></div>
 <aside class="answer" aria-labelledby="short"><h2 id="short">{t['short']}</h2><p>{esc(p['summary'])}</p></aside>
 <div class="prose">{p['html']}</div>
 <div class="author"><img src="/assets/ivor-benko.jpg" width="240" height="240" alt="{NAME}" loading="lazy"><p><a href="{PAGES['about'][lang]}"><strong>{NAME}</strong></a><br>{t['author_bio']}</p></div>
 {trans}
-</article>
-<section class="section" aria-labelledby="more-h"><div class="section-head"><h2 id="more-h">{t['more_posts']}</h2><a class="textlink" href="{PAGES['blog'][lang]}">{t['all_posts']}</a></div>{post_list(lang, more)}</section>
-</div>"""
+</article></div></div>
+<section class="band band-white wave-top" aria-labelledby="more-h"><div class="wrap"><div class="section-head"><h2 id="more-h">{t['more_posts']}</h2><a class="textlink" href="{PAGES['blog'][lang]}">{t['all_posts']} →</a></div>{post_list(lang, more)}</div></section>"""
     extra = (f'<meta property="article:published_time" content="{p["date"]}"><meta property="article:modified_time" content="{p["updated"]}">'
              f'<meta property="article:author" content="{abs_url(PAGES["about"][lang])}"><meta property="article:section" content="{CATEGORIES[p["category"]][lang]}">')
     return path, head(lang, path, alt, title, p["description"], ld, og_type="article", extra_meta=extra) + header(lang, "blog", alt) + body + footer(lang)
 
 def page_404():
     ld = [website()]
-    body = """<div class="wrap"><section class="hero" style="grid-template-columns:1fr"><div>
-<h1>Page not found</h1><p class="lede">This page doesn't exist or has moved. Go to the <a href="/">home page</a> or the <a href="/blog/">blog</a>.</p>
-<p class="lede" lang="hr">Ova stranica ne postoji ili je premještena. Idite na <a href="/hr/">početnu</a> ili na <a href="/hr/blog/">blog</a>.</p>
-</div></section></div>"""
+    body = hero("Page not found", 'This page doesn\'t exist or has moved. Go to the <a href="/">home page</a> or the <a href="/blog/">info section</a>.',
+                compact=True) + """<div class="band band-foam"><div class="wrap"><p class="lede" lang="hr">Ova stranica ne postoji ili je premještena. Idite na <a href="/hr/">početnu</a> ili na <a href="/hr/blog/">info</a>.</p></div></div>"""
     h = head("en", "/404.html", {}, "Page not found — Ivor Benko", "Page not found.", ld).replace(
         'content="index, follow, max-image-preview:large, max-snippet:-1"', 'content="noindex"')
     return "/404.html", h + header("en", None, {"hr": "/hr/"}) + body + footer("en")
@@ -687,10 +851,11 @@ def llms_txt():
     lines += ["## Pages", "",
               f"- [About Ivor Benko]({SITE}/about/): biography, experience, qualifications",
               f"- [Private skipper in Croatia]({SITE}/skipper/): skipper services, boats, sailing area, FAQ",
-              f"- [Blog]({SITE}/blog/): sailing guides for Croatia", "", "## Blog posts (English)", ""]
+              f"- [Book a boat in Croatia]({SITE}/booking/): help choosing a sailboat or catamaran, base and route",
+              f"- [Info and blog]({SITE}/blog/): sailing guides for Croatia", "", "## Blog posts (English)", ""]
     lines += [f"- [{p['title']}]({abs_url(p['path'])}): {p['summary']}" for p in en]
     lines += ["", "## Croatian version (Hrvatski)", "",
-              f"- [O meni]({SITE}/hr/o-meni/)", f"- [Privatni skiper]({SITE}/hr/skiper/)", f"- [Blog]({SITE}/hr/blog/)"]
+              f"- [O meni]({SITE}/hr/o-meni/)", f"- [Privatni skiper]({SITE}/hr/skiper/)", f"- [Najam broda]({SITE}/hr/najam-broda/)", f"- [Blog]({SITE}/hr/blog/)"]
     lines += [f"- [{p['title']}]({abs_url(p['path'])})" for p in hr]
     lines += ["", "## Optional", "", f"- [Full text of all posts]({SITE}/llms-full.txt)", ""]
     return "\n".join(lines)
@@ -703,7 +868,7 @@ def llms_full():
                        f"Short answer: {p['summary']}\n\n{p['body_md']}\n\n---\n")
     return "\n".join(out)
 
-FAVICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#0F2D40"/><path d="M30 10 L30 46 L12 46 Z" fill="#FAFBF8"/><path d="M34 16 L34 46 L50 46 Z" fill="#E09A12"/><path d="M10 50 H54 L48 56 H16 Z" fill="#FAFBF8"/></svg>"""
+FAVICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#062B3F"/><path d="M30 10 L30 46 L12 46 Z" fill="#F4FAFB"/><path d="M34 16 L34 46 L50 46 Z" fill="#F2A900"/><path d="M10 50 H54 L48 56 H16 Z" fill="#0E8FA3"/></svg>"""
 
 # ---------------------------------------------------------------- images
 def make_images(assets):
@@ -713,7 +878,7 @@ def make_images(assets):
         print("Pillow not installed, skipping og-image"); return
     fonts = ROOT / "static" / "fonts-src"
     W, H = 1200, 630
-    img = Image.new("RGB", (W, H), "#0F2D40")
+    img = Image.new("RGB", (W, H), "#062B3F")
     d = ImageDraw.Draw(img)
     def font(fname, size, axes=None):
         f = ImageFont.truetype(str(fonts / fname), size)
@@ -728,17 +893,37 @@ def make_images(assets):
         if (i // 40) % 2 == 0:
             d.rectangle([i, 0, i + 39, 9], fill="#FAFBF8"); d.rectangle([i, H - 10, i + 39, H], fill="#FAFBF8")
     d.text((80, 150), NAME, font=serif, fill="#FAFBF8")
-    d.text((84, 300), "Skipper on sailboats and catamarans", font=ital, fill="#8FD3CC")
-    d.text((84, 356), "Skiper na jedrilicama i katamaranima", font=ital, fill="#8FD3CC")
+    d.text((84, 300), "Skipper on sailboats and catamarans", font=ital, fill="#BFE6EA")
+    d.text((84, 356), "Skiper na jedrilicama i katamaranima", font=ital, fill="#BFE6EA")
     d.text((84, 500), "ivorbenko.com", font=sans, fill="#C9D8DA")
     portrait = Image.open(ROOT / "static" / "ivor-benko.jpg").convert("RGB").resize((300, 300), Image.LANCZOS)
     mask = Image.new("L", (300, 300), 0); ImageDraw.Draw(mask).ellipse([0, 0, 299, 299], fill=255)
     img.paste(portrait, (830, 165), mask)
-    d.ellipse([826, 161, 1133, 468], outline="#E09A12", width=4)
+    d.ellipse([826, 161, 1133, 468], outline="#F2A900", width=4)
     img.save(assets / "og-image.jpg", quality=88)
     Image.open(ROOT / "static" / "ivor-benko.jpg").convert("RGB").resize((180, 180), Image.LANCZOS).save(assets / "apple-touch-icon.png")
 
 # ---------------------------------------------------------------- build
+def copy_photos(assets):
+    """Optional photos: static/photos/hero.jpg, ivor.jpg and gallery/*.jpg (resized, converted to jpg)."""
+    src = ROOT / "static" / "photos"
+    if not src.exists(): return
+    try:
+        from PIL import Image, ImageOps
+    except ImportError:
+        print("Pillow not installed, skipping photos"); return
+    def save(f, dest, maxw):
+        im = ImageOps.exif_transpose(Image.open(f)).convert("RGB")
+        if im.width > maxw: im = im.resize((maxw, round(im.height * maxw / im.width)), Image.LANCZOS)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        im.save(dest, "JPEG", quality=82, optimize=True, progressive=True)
+    for name, w in (("hero", 2000), ("ivor", 900)):
+        for ext in ("jpg", "jpeg", "png", "webp"):
+            f = src / f"{name}.{ext}"
+            if f.exists(): save(f, assets / "photos" / f"{name}.jpg", w); break
+    for f in photo_files("gallery"):
+        save(f, assets / "photos" / "gallery" / f"{f.stem}.jpg", 1200)
+
 def write(path, content):
     f = OUT / (path.lstrip("/") + ("index.html" if path.endswith("/") else ""))
     f.parent.mkdir(parents=True, exist_ok=True)
@@ -751,8 +936,9 @@ def main():
     shutil.copy(ROOT / "static" / "style.css", assets / "style.css")
     shutil.copy(ROOT / "static" / "ivor-benko.jpg", assets / "ivor-benko.jpg")
     make_images(assets)
+    copy_photos(assets)
     entries = []
-    for fn in (page_home, page_skipper, page_about, page_blog):
+    for fn in (page_home, page_skipper, page_booking, page_about, page_blog):
         for lang in LANGS:
             path, htm = fn(lang); write(path, htm)
         key = fn.__name__.replace("page_", "")

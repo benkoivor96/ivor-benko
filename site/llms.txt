@@ -17,7 +17,8 @@ Key facts:
 
 - [About Ivor Benko](https://ivorbenko.com/about/): biography, experience, qualifications
 - [Private skipper in Croatia](https://ivorbenko.com/skipper/): skipper services, boats, sailing area, FAQ
-- [Blog](https://ivorbenko.com/blog/): sailing guides for Croatia
+- [Book a boat in Croatia](https://ivorbenko.com/booking/): help choosing a sailboat or catamaran, base and route
+- [Info and blog](https://ivorbenko.com/blog/): sailing guides for Croatia
 
 ## Blog posts (English)
 
@@ -32,6 +33,7 @@ Key facts:
 
 - [O meni](https://ivorbenko.com/hr/o-meni/)
 - [Privatni skiper](https://ivorbenko.com/hr/skiper/)
+- [Najam broda](https://ivorbenko.com/hr/najam-broda/)
 - [Blog](https://ivorbenko.com/hr/blog/)
 - [Od instruktora skijanja do skipera: kako sam završio na moru](https://ivorbenko.com/hr/blog/od-instruktora-skijanja-do-skipera/)
 - [Što ponijeti na tjedan jedrenja u Hrvatskoj](https://ivorbenko.com/hr/blog/sto-ponijeti-na-jedrenje/)

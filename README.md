@@ -13,11 +13,22 @@ Dvojezična (EN/HR) statična web stranica. Nema baze, nema CMS-a, nema JavaScri
 |---|---|
 | `/` | `/hr/` |
 | `/skipper/` | `/hr/skiper/` |
+| `/booking/` | `/hr/najam-broda/` |
 | `/about/` | `/hr/o-meni/` |
 | `/blog/` | `/hr/blog/` |
 | `/blog/<slug>/` | `/hr/blog/<slug>/` |
 
 Engleski je na korijenu domene (`x-default`) jer je većina gostiju chartera stranaca, a i AI tražilice najviše pretražuju na engleskom.
+
+## Fotografije
+
+Stavi fotke u `source/static/photos/` pa pokreni `python build.py`:
+
+- `hero.jpg`: velika fotka za pozadinu naslovnog dijela (najbolje 2000 px širine, more/brod)
+- `ivor.jpg`: tvoja veća slika (zamjenjuje malu `ivor-benko.jpg`)
+- `gallery/*.jpg`: galerija na početnoj stranici (pojavi se sama kad ima fotki)
+
+Build ih sam smanji i optimizira. Bez fotki stranica koristi morski gradijent.
 
 ## Objava (najlakše: Cloudflare Pages ili Netlify, oboje besplatno)
 
