@@ -58,7 +58,7 @@ T = {
         "ask": "Ask availability",
         "other": "Hrvatski", "other_lang": "hr", "home": "Home",
         "read": "min read", "short": "Short answer", "by": "Written by",
-        "author_bio": "Skipper on sailboats and catamarans in Croatia since 2020, ISIA ski instructor and web developer from Zagreb.",
+        "author_bio": "Skipper on sailboats and catamarans in Croatia since 2023, ISIA ski instructor and web developer from Zagreb.",
         "more_posts": "More from the blog", "all_posts": "All posts",
         "coming": "Skiing posts are coming soon. For now, the blog is about sailing.",
         "translation": "Pročitaj na hrvatskom",
@@ -72,7 +72,7 @@ T = {
         "ask": "Provjeri dostupnost",
         "other": "English", "other_lang": "en", "home": "Početna",
         "read": "min čitanja", "short": "Ukratko", "by": "Autor",
-        "author_bio": "Skiper na jedrilicama i katamaranima u Hrvatskoj od 2020., ISIA instruktor skijanja i web developer iz Zagreba.",
+        "author_bio": "Skiper na jedrilicama i katamaranima u Hrvatskoj od 2023., ISIA instruktor skijanja i web developer iz Zagreba.",
         "more_posts": "Još s bloga", "all_posts": "Svi tekstovi",
         "coming": "Tekstovi o skijanju stižu uskoro. Za sada je blog o jedrenju.",
         "translation": "Read in English",
@@ -132,8 +132,8 @@ def twin(post):
 # ---------------------------------------------------------------- structured data
 def person(lang):
     desc = {
-        "en": "Ivor Benko is a Croatian skipper from Zagreb who has captained sailboats and catamarans on private and charter trips in the Adriatic Sea since 2020. He is also a licensed ISIA ski instructor and builds websites and apps.",
-        "hr": "Ivor Benko je hrvatski skiper iz Zagreba koji od 2020. vodi jedrilice i katamarane na privatnim i charter plovidbama po Jadranu. Također je licencirani ISIA instruktor skijanja i izrađuje web stranice i aplikacije.",
+        "en": "Ivor Benko is a Croatian skipper from Zagreb who has captained sailboats and catamarans on private and charter trips in the Adriatic Sea since 2023. He is also a licensed ISIA ski instructor and builds websites and apps.",
+        "hr": "Ivor Benko je hrvatski skiper iz Zagreba koji od 2023. vodi jedrilice i katamarane na privatnim i charter plovidbama po Jadranu. Također je licencirani ISIA instruktor skijanja i izrađuje web stranice i aplikacije.",
     }[lang]
     p = {
         "@type": "Person", "@id": SITE + "/#person",
@@ -254,7 +254,7 @@ def hero(h1, lede="", actions="", kicker="", role="", side="", trust=None, compa
 
 def portrait_side(lang):
     src = "/assets/photos/ivor.jpg" if (ROOT / "static" / "photos" / "ivor.jpg").exists() else "/assets/ivor-benko.jpg"
-    badge = "Skipper since 2020" if lang == "en" else "Skiper od 2020."
+    badge = "Skipper since 2023" if lang == "en" else "Skiper od 2023."
     return f'<div class="hero-portrait"><img src="{src}" width="480" height="480" alt="{NAME}"><span class="badge">{badge}</span></div>'
 
 def header(lang, current, alt):
@@ -318,10 +318,11 @@ def post_list(lang, posts):
                     for p in posts)
     return f'<ul class="cards">{items}</ul>'
 
-def gallery_html():
+def gallery_html(lang="en"):
     files = photo_files("gallery")
     if not files: return ""
-    items = "".join(f'<li><img src="/assets/photos/gallery/{f.stem}.jpg" alt="" loading="lazy"></li>' for f in files)
+    alt = "Ivor Benko on board" if lang == "en" else "Ivor Benko na brodu"
+    items = "".join(f'<li><img src="/assets/photos/gallery/{f.stem}.jpg" alt="{alt}" loading="lazy"></li>' for f in files)
     return f'<ul class="gallery">{items}</ul>'
 
 
@@ -390,16 +391,16 @@ def page_home(lang):
     t = T[lang]; path = PAGES["home"][lang]; alt = PAGES["home"]
     if lang == "en":
         title = "Ivor Benko — Skipper on sailboats and catamarans in Croatia"
-        desc = "Ivor Benko is a skipper from Zagreb who has captained sailboats and catamarans in the Croatian Adriatic since 2020. Private skipper for charters, boat booking help, sailing info, skiing and web."
+        desc = "Ivor Benko is a skipper from Zagreb who has captained sailboats and catamarans in the Croatian Adriatic since 2023. Private skipper for charters, boat booking help, sailing info, skiing and web."
         role = "Skipper on sailboats and catamarans in the Croatian Adriatic"
         lede = "I plan the route around the weather, handle the marinas and anchorages, and make sure everyone on board has a good week at sea."
         cta1, cta2 = "Ask about availability", "Read the sailing blog"
         cap = "A week around the Kornati, as I'd plot it from Murter."
-        facts = [("Skipper since", "2020, private guests and charters"), ("Boats", "Sailboats and catamarans, 42–46&nbsp;ft"),
-                 ("Languages", "Croatian, English, German"), ("Sailing area", "The whole Croatian Adriatic")]
+        facts = [("Skipper since", "2023, private guests and charters"), ("Boats", "Sailboats, catamarans and motor yachts, 40–60&nbsp;ft"),
+                 ("Languages", "Croatian, English, German"), ("Sailing area", "Kornati, Šibenik archipelago and central and southern Dalmatia")]
         on_board_h = "What I do on board"
         on_board = ("<p>As your skipper I'm responsible for the boat and for everyone on it. I read the forecast every morning and evening and choose the route and tonight's anchorage for tomorrow's wind. I handle the check-in with the charter base, every marina and every mooring, and I'm happy to teach anyone who wants to steer, trim or learn the knots.</p>"
-                    "<p>I learned to sail at the Faculty of Kinesiology in Zagreb, worked as a sailing instructor on Murter and have been skippering since 2020.</p>")
+                    "<p>I learned to sail at the Faculty of Kinesiology in Zagreb, worked as a sailing instructor on Murter and have been skippering since 2023.</p>")
         more = "How I work as a skipper"
         fleet_h = ("Sailboats I skipper", "Catamarans I skipper")
         blog_h = "Sailing blog"
@@ -408,16 +409,16 @@ def page_home(lang):
                "<div><h3>Websites and apps</h3><p>I also build websites and apps, including this one. Write to me if you need one.</p></div>")
     else:
         title = "Ivor Benko — skiper na jedrilicama i katamaranima u Hrvatskoj"
-        desc = "Ivor Benko je skiper iz Zagreba koji od 2020. vodi jedrilice i katamarane po hrvatskom Jadranu. Privatni skiper za chartere, pomoć pri najmu broda, info o jedrenju, skijanje i web."
+        desc = "Ivor Benko je skiper iz Zagreba koji od 2023. vodi jedrilice i katamarane po hrvatskom Jadranu. Privatni skiper za chartere, pomoć pri najmu broda, info o jedrenju, skijanje i web."
         role = "Skiper na jedrilicama i katamaranima na hrvatskom Jadranu"
         lede = "Planiram rutu prema vremenu, vodim marine i sidrenje i brinem se da svi na brodu imaju dobar tjedan na moru."
         cta1, cta2 = "Provjeri dostupnost", "Čitaj blog o jedrenju"
         cap = "Tjedan oko Kornata, kako bih ga ucrtao s Murtera."
-        facts = [("Skiper od", "2020., privatni gosti i charteri"), ("Brodovi", "Jedrilice i katamarani, 42–46&nbsp;stopa"),
-                 ("Jezici", "hrvatski, engleski, njemački"), ("Područje", "Cijeli hrvatski Jadran")]
+        facts = [("Skiper od", "2023., privatni gosti i charteri"), ("Brodovi", "Jedrilice, katamarani i motorne jahte, 40–60&nbsp;stopa"),
+                 ("Jezici", "hrvatski, engleski, njemački"), ("Područje", "Kornati, šibenski arhipelag te srednja i južna Dalmacija")]
         on_board_h = "Što radim na brodu"
         on_board = ("<p>Kao vaš skiper odgovoran sam za brod i za sve na njemu. Prognozu čitam svako jutro i večer, a rutu i večerašnje sidrište biram prema sutrašnjem vjetru. Vodim preuzimanje broda u charter bazi, svaku marinu i svaki vez, a rado podučim svakoga tko želi kormilariti, trimati jedra ili naučiti čvorove.</p>"
-                    "<p>Jedriti sam naučio na Kineziološkom fakultetu u Zagrebu, radio sam kao instruktor jedrenja na Murteru i skiper sam od 2020.</p>")
+                    "<p>Jedriti sam naučio na Kineziološkom fakultetu u Zagrebu, radio sam kao instruktor jedrenja na Murteru i skiper sam od 2023.</p>")
         more = "Kako radim kao skiper"
         fleet_h = ("Jedrilice koje vodim", "Katamarani koje vodim")
         blog_h = "Blog o jedrenju"
@@ -431,12 +432,12 @@ def page_home(lang):
     fleet = (f'<div class="fleet"><div><h3>{fleet_h[0]}</h3><ul>{"".join(f"<li>{b}</li>" for b in SAILBOATS)}</ul></div>'
              f'<div><h3>{fleet_h[1]}</h3><ul>{"".join(f"<li>{b}</li>" for b in CATAMARANS)}</ul></div></div>')
     C = {
-        "en": dict(kick="Skipper · Boat booking · Sailing info", trust=["Skipper since 2020", "Croatian · English · German", "Kornati, Dalmatia, Istria", "Sailboats and catamarans"],
+        "en": dict(kick="Skipper · Boat booking · Sailing info", trust=["Skipper since 2023", "Croatian · English · German", "Kornati, Dalmatia, Vis", "Sailboats, catamarans, motor yachts"],
                    choices=[("skipper", ICON_HELM, "Hire a skipper", "Book the boat with any charter company and I'll skipper it. Route, marinas, anchorages and check-in handled.", "See how it works"),
                             ("booking", ICON_BOAT, "Book a boat", "Not sure which boat or base? I'll help you choose between sailboat and catamaran and plan the week.", "Find your boat"),
                             ("blog", ICON_COMPASS, "Sailing info", "Winds, bays, marines and packing lists, written by a skipper for guests and fellow skippers.", "Read the guides")],
                    chart_h="A week around the Kornati", info_h="Info for guests and skippers", info_sub="Practical notes from the water.", gal_h="On the water"),
-        "hr": dict(kick="Skiper · Najam broda · Info o jedrenju", trust=["Skiper od 2020.", "Hrvatski · engleski · njemački", "Kornati, Dalmacija, Istra", "Jedrilice i katamarani"],
+        "hr": dict(kick="Skiper · Najam broda · Info o jedrenju", trust=["Skiper od 2023.", "Hrvatski · engleski · njemački", "Kornati, Dalmacija, Vis", "Jedrilice, katamarani, motorne jahte"],
                    choices=[("skipper", ICON_HELM, "Unajmi skipera", "Rezerviraj brod kod bilo koje charter tvrtke, a ja ću ga voditi. Ruta, marine, sidrišta i preuzimanje broda riješeni.", "Kako to funkcionira"),
                             ("booking", ICON_BOAT, "Najam broda", "Ne znaš koji brod ili bazu? Pomoći ću ti odabrati između jedrilice i katamarana i složiti tjedan.", "Pronađi brod"),
                             ("blog", ICON_COMPASS, "Info o jedrenju", "Vjetrovi, uvale, marine i popisi stvari, od skipera za goste i kolege skipere.", "Čitaj vodiče")],
@@ -447,7 +448,7 @@ def page_home(lang):
         for i, (k, ic, h, tx, go) in enumerate(C["choices"]))
     actions = (f'<a class="btn" href="{PAGES["skipper"][lang]}">{t["skipper"]}</a>'
                f'<a class="btn btn-ghost" href="{PAGES["booking"][lang]}">{t["booking"]}</a>')
-    gal = gallery_html()
+    gal = gallery_html(lang)
     gal_sec = f'<section class="band band-foam"><div class="wrap"><div class="section-head"><h2>{C["gal_h"]}</h2></div>{gal}</div></section>' if gal else ""
     body = f"""{hero(NAME, lede, actions, kicker=C['kick'], role=role, side=portrait_side(lang), trust=C['trust'])}
 <div class="wrap">
@@ -476,7 +477,7 @@ def page_skipper(lang):
     anchor = "contact" if lang == "en" else "kontakt"
     if lang == "en":
         title = "Private skipper in Croatia for sailboat and catamaran charters — Ivor Benko"
-        desc = "Hire Ivor Benko as a private skipper for your yacht or catamaran charter in Croatia. Skipper since 2020, speaks Croatian, English and German, knows the Adriatic weather."
+        desc = "Hire Ivor Benko as a private skipper for your yacht or catamaran charter in Croatia. Skipper since 2023, speaks Croatian, English and German, knows the Adriatic weather."
         h1 = "Private skipper for sailboat and catamaran charters in Croatia"
         lede = "Book the boat with any charter company, and I'll skipper it. Or ask me first and I'll help you choose."
         does_h = "What you get with me as your skipper"
@@ -487,7 +488,7 @@ def page_skipper(lang):
                 "<strong>Sailing lessons if you want them.</strong> I've worked as a sailing instructor. Steering, sail trim, knots and mooring, at whatever pace suits you.",
                 "<strong>Three languages.</strong> Croatian, English (C1) and German (B1)."]
         area_h = "Where I sail"
-        area = "<p>The whole Croatian Adriatic, from Istria and Kvarner to central and southern Dalmatia. I know the Kornati and the Šibenik archipelago especially well, because I worked as a sailing instructor on Murter.</p>"
+        area = "<p>Kornati and the Šibenik archipelago (Žut, Žirje, Zlarin, Telašćica, Primošten, Šibenik) and central and southern Dalmatia. My favourite islands are Vis, Korčula, Hvar and Šćedro. I usually sail from Split, Kaštel Gomilica, Šolta, Trogir, Rogoznica and Primošten, and I know most Croatian marinas.</p>"
         steps_h = "How it works"
         steps = [("Tell me your plans", "Dates, number of guests, the boat or charter base if you have one, and what kind of week you want."),
                  ("I confirm availability", "We agree on my fee, meals on board and where I'll sleep, and I suggest a rough route."),
@@ -495,7 +496,7 @@ def page_skipper(lang):
                  ("The week at sea", "We sail, swim and eat well. The route adapts to the forecast every day."),
                  ("Check-out", "I return the boat to the base and handle the handover with the charter company.")]
         qual_h = "Experience and qualifications"
-        qual = [("Skipper", "Since 2020, on private and charter trips"), ("Sailboats", ", ".join(SAILBOATS)), ("Catamarans", ", ".join(CATAMARANS)),
+        qual = [("Skipper", "Since 2023, on private and charter trips"), ("Boats", "Sailboats, catamarans and motor yachts, 40–60 ft (e.g. " + ", ".join(SAILBOATS[:2] + CATAMARANS[:1]) + ")"),
                 ("Training", "Sail Week skipper academy, completed with an A grade (2024)"), ("Licence", "Croatian boat licence, category C"),
                 ("Background", "Faculty of Kinesiology, University of Zagreb, specialised in sailing and water sports; sailing instructor on Murter; Laser Radial, Optimist and Laser Stratos; regattas")]
         faq_h = "Questions guests ask"
@@ -508,7 +509,7 @@ def page_skipper(lang):
                ("Do you cook and clean?", "A skipper is responsible for the boat and your safety, not for cooking or cleaning guest cabins. If you'd like that, ask the charter company about a hostess.")]
     else:
         title = "Privatni skiper u Hrvatskoj za najam jedrilica i katamarana — Ivor Benko"
-        desc = "Unajmite Ivora Benka kao privatnog skipera za charter jedrilice ili katamarana u Hrvatskoj. Skiper od 2020., govori hrvatski, engleski i njemački i poznaje jadransko vrijeme."
+        desc = "Unajmite Ivora Benka kao privatnog skipera za charter jedrilice ili katamarana u Hrvatskoj. Skiper od 2023., govori hrvatski, engleski i njemački i poznaje jadransko vrijeme."
         h1 = "Privatni skiper za charter jedrilica i katamarana u Hrvatskoj"
         lede = "Rezervirajte brod kod bilo koje charter tvrtke, a ja ću biti skiper. Ili mi se javite prije i pomoći ću vam odabrati."
         does_h = "Što dobivate sa mnom kao skiperom"
@@ -519,7 +520,7 @@ def page_skipper(lang):
                 "<strong>Škola jedrenja ako želite.</strong> Radio sam kao instruktor jedrenja. Kormilarenje, trim jedara, čvorovi i vez, tempom koji vam odgovara.",
                 "<strong>Tri jezika.</strong> Hrvatski, engleski (C1) i njemački (B1)."]
         area_h = "Gdje jedrim"
-        area = "<p>Cijeli hrvatski Jadran, od Istre i Kvarnera do srednje i južne Dalmacije. Posebno dobro poznajem Kornate i šibenski arhipelag, jer sam radio kao instruktor jedrenja na Murteru.</p>"
+        area = "<p>Kornati i šibenski arhipelag (Žut, Žirje, Zlarin, Telašćica, Primošten, Šibenik) te srednja i južna Dalmacija. Najdraži su mi Vis, Korčula, Hvar i Šćedro. Najčešće plovim iz Splita, Kaštel Gomilice, Šolte, Trogira, Rogoznice i Primoštena, a poznajem većinu hrvatskih marina.</p>"
         steps_h = "Kako to funkcionira"
         steps = [("Javite mi planove", "Termin, broj gostiju, brod ili charter bazu ako ih imate i kakav tjedan želite."),
                  ("Potvrđujem dostupnost", "Dogovaramo cijenu, obroke na brodu i gdje spavam, a ja predlažem okvirnu rutu."),
@@ -527,7 +528,7 @@ def page_skipper(lang):
                  ("Tjedan na moru", "Jedrimo, kupamo se i dobro jedemo. Ruta se svaki dan prilagođava prognozi."),
                  ("Predaja broda", "Vraćam brod u bazu i obavljam primopredaju s charter tvrtkom.")]
         qual_h = "Iskustvo i kvalifikacije"
-        qual = [("Skiper", "Od 2020., na privatnim i charter plovidbama"), ("Jedrilice", ", ".join(SAILBOATS)), ("Katamarani", ", ".join(CATAMARANS)),
+        qual = [("Skiper", "Od 2023., na privatnim i charter plovidbama"), ("Brodovi", "Jedrilice, katamarani i motorne jahte, 40–60 stopa (npr. " + ", ".join(SAILBOATS[:2] + CATAMARANS[:1]) + ")"),
                 ("Edukacija", "Sail Week skiperska akademija, završena s ocjenom A (2024.)"), ("Ispit", "Voditelj brodice kategorije C"),
                 ("Iskustvo", "Kineziološki fakultet Sveučilišta u Zagrebu, usmjerenje jedrenje i sportovi na vodi; instruktor jedrenja na Murteru; Laser Radial, Optimist i Laser Stratos; regate")]
         faq_h = "Pitanja koja gosti postavljaju"
@@ -553,8 +554,8 @@ def page_skipper(lang):
     ask = 'Ask about availability' if lang == 'en' else 'Provjeri dostupnost'
     other_btn = (f'<a class="btn btn-ghost" href="{PAGES["booking"][lang]}">{t["booking"]}</a>')
     kick = "Private skipper" if lang == "en" else "Privatni skiper"
-    trust = (["Skipper since 2020", "Sailboats and catamarans", "Croatian · English · German"] if lang == "en"
-             else ["Skiper od 2020.", "Jedrilice i katamarani", "Hrvatski · engleski · njemački"])
+    trust = (["Skipper since 2023", "Sailboats and catamarans", "Croatian · English · German"] if lang == "en"
+             else ["Skiper od 2023.", "Jedrilice i katamarani", "Hrvatski · engleski · njemački"])
     body = f"""{hero(h1, lede, f'<a class="btn" href="#{anchor}">{ask}</a>{other_btn}', kicker=kick, trust=trust, compact=True)}
 <section class="band band-foam" aria-labelledby="does-h"><div class="wrap">
 <div class="section-head"><h2 id="does-h">{does_h}</h2></div>
@@ -663,56 +664,78 @@ def page_about(lang):
     anchor = "contact" if lang == "en" else "kontakt"
     if lang == "en":
         title = "About Ivor Benko — skipper, ski instructor and web developer from Zagreb"
-        desc = "Who is Ivor Benko? A Croatian skipper from Zagreb, sailing sailboats and catamarans in the Adriatic since 2020, ISIA ski instructor and web developer. Experience, education and qualifications."
+        desc = "Who is Ivor Benko? A Croatian skipper from Zagreb, sailing sailboats and catamarans in the Adriatic since 2023, ISIA ski instructor and web developer. Experience, education and qualifications."
         h1 = "About Ivor Benko"
-        facts = [("Name", NAME), ("Based in", "Zagreb, Croatia"), ("Work", "Skipper on sailboats and catamarans (since 2020), ski instructor, web and app developer"),
-                 ("Sailing area", "Croatian Adriatic, especially the Kornati and central Dalmatia"),
-                 ("Boats", ", ".join(SAILBOATS + CATAMARANS)),
+        facts = [("Name", NAME), ("Based in", "Zagreb, Croatia"), ("Work", "Skipper on sailboats and catamarans (since 2023), ski instructor, web and app developer"),
+                 ("Sailing area", "Kornati, Šibenik archipelago and central and southern Dalmatia"),
+                 ("Boats", "Sailboats, catamarans and motor yachts, 40–60 ft (e.g. " + ", ".join(SAILBOATS[:2] + CATAMARANS[:1]) + ")"),
                  ("Qualifications", "Croatian boat licence (category C); Sail Week skipper academy, A grade (2024); ISIA ski instructor licence; driving licence (category B)"),
                  ("Education", "Faculty of Kinesiology, University of Zagreb (from 2017), specialised in sailing and water sports; secondary school of nutrition in Zagreb (2011–2015)"),
                  ("Languages", "Croatian (native), English (C1), German (B1)"),
                  ("Contact", f'<a href="mailto:{EMAIL}">{EMAIL}</a>, <a href="tel:{PHONE_E164}">{PHONE}</a>')]
-        bio = ("<p>I'm a skipper from Zagreb. I've skied my whole life and became a licensed ski instructor. While studying at the Faculty of Kinesiology, where I specialised in sailing and water sports, I discovered sailing and fell in love with it straight away.</p>"
-               "<p>Since then I've sailed small boat classes like the Laser Radial, Optimist and Laser Stratos, windsurfed, raced in regattas, worked as a sailing instructor for the faculty on Murter and sailed big boats all over the Adriatic. In 2020 I turned the hobby into my profession, and I've worked as a captain and skipper for private guests and charters ever since.</p>"
+        bio = ("<p>I'm a skipper from Zagreb. I've skied my whole life and became a licensed ski instructor. While studying at the Faculty of Kinesiology, where I specialised in sailing and water sports, I discovered sailing in 2019 and fell in love with it straight away.</p>"
+               "<p>Since then I've sailed small boat classes like the Laser Radial, Optimist and Laser Stratos, windsurfed, raced in regattas, worked as a sailing instructor for the faculty on Murter and sailed big boats along the Adriatic. In 2023 I turned the hobby into my profession, and I've worked as a captain and skipper for private guests and charters ever since.</p>"
                "<p>I know the Adriatic weather well, and I've been organising sports activities for more than ten years, from skiing and windsurfing to fitness, acrobatics and breakdance. People tell me I'm communicative, cheerful and organised, which is most of what you want from someone you share a boat with for a week.</p>"
                "<p>Outside of sailing I build websites and apps and write, and in winter I'm back on the slopes.</p>")
         exp_h = "Experience"
-        exp = [("2020–today", "Captain and skipper, private guests and charters", f"Sailboats: {', '.join(SAILBOATS)}. Catamarans: {', '.join(CATAMARANS)}."),
-               ("2020–today", "Sailing", "Sailing instructor for the Faculty of Kinesiology on Murter. Laser Radial, Optimist and Laser Stratos. Big boats (45 ft and up) all over the Adriatic. Regattas."),
-               ("2024", "Sail Week skipper academy", "Skipper course completed with an A grade."),
+        exp = [("2026", "Skipper, 15+ weeks", "Sailboats and catamarans 40–60 ft, and motor yachts."),
+               ("2025", "Skipper, 15+ weeks", "Sailboats and catamarans 40–60 ft, and motor yachts."),
+               ("2024", "Skipper, 15+ weeks", "Sailboats and catamarans 40–60 ft, and motor yachts. Completed the Sail Week skipper academy with an A grade."),
+               ("2023", "First season as a skipper", "5–10 weeks at sea."),
+               ("Transfers", "Delivery trips", "A boat transfer from Lagos (Portugal) to Punat on Krk, plus 10+ shorter transfers along the Adriatic."),
+               ("2019", "Started sailing", "At the Faculty of Kinesiology. Sailing instructor on Murter; Laser Radial, Optimist and Laser Stratos; regattas."),
                ("10+ years", "Organising sports activities", "Windsurfing, skiing, fitness, acrobatics, breakdance and dinghy sailing.")]
+        places_h = "Where I sail"
+        places = [("Kornati and Šibenik", "Kornati, Žut, Žirje, Zlarin, Biograd, Pašman, Primošten, Šibenik, Telašćica"),
+                  ("Favourite islands", "Vis, Korčula, Hvar, Šćedro"),
+                  ("Bases", "Split, Kaštel Gomilica, Šolta, Trogir, Rogoznica (Frapa), Primošten (Kremik)"),
+                  ("Marinas", "I know most Croatian marinas"),
+                  ("Charter companies", "I work as a freelancer with many charter companies")]
         skills_h = "Other skills"
         skills = "Skiing and ski instruction (ISIA licence), web and app development, digital marketing, copywriting and storytelling, breakdance."
     else:
         title = "O meni — Ivor Benko, skiper, instruktor skijanja i web developer iz Zagreba"
-        desc = "Tko je Ivor Benko? Hrvatski skiper iz Zagreba koji od 2020. vodi jedrilice i katamarane po Jadranu, ISIA instruktor skijanja i web developer. Iskustvo, obrazovanje i kvalifikacije."
+        desc = "Tko je Ivor Benko? Hrvatski skiper iz Zagreba koji od 2023. vodi jedrilice i katamarane po Jadranu, ISIA instruktor skijanja i web developer. Iskustvo, obrazovanje i kvalifikacije."
         h1 = "O meni"
-        facts = [("Ime", NAME), ("Baza", "Zagreb, Hrvatska"), ("Posao", "Skiper na jedrilicama i katamaranima (od 2020.), instruktor skijanja, izrada webova i aplikacija"),
-                 ("Područje", "Hrvatski Jadran, posebno Kornati i srednja Dalmacija"),
-                 ("Brodovi", ", ".join(SAILBOATS + CATAMARANS)),
+        facts = [("Ime", NAME), ("Baza", "Zagreb, Hrvatska"), ("Posao", "Skiper na jedrilicama i katamaranima (od 2023.), instruktor skijanja, izrada webova i aplikacija"),
+                 ("Područje", "Kornati, šibenski arhipelag te srednja i južna Dalmacija"),
+                 ("Brodovi", "Jedrilice, katamarani i motorne jahte, 40–60 stopa (npr. " + ", ".join(SAILBOATS[:2] + CATAMARANS[:1]) + ")"),
                  ("Kvalifikacije", "Voditelj brodice kategorije C; Sail Week skiperska akademija, ocjena A (2024.); licenca ISIA instruktora skijanja; vozačka dozvola B kategorije"),
                  ("Obrazovanje", "Kineziološki fakultet Sveučilišta u Zagrebu (od 2017.), usmjerenje jedrenje i sportovi na vodi; srednja škola za nutricioniste u Zagrebu (2011.–2015.)"),
                  ("Jezici", "hrvatski (materinski), engleski (C1), njemački (B1)"),
                  ("Kontakt", f'<a href="mailto:{EMAIL}">{EMAIL}</a>, <a href="tel:{PHONE_E164}">{PHONE}</a>')]
-        bio = ("<p>Ja sam skiper iz Zagreba. Skijam cijeli život i postao sam licencirani instruktor skijanja. Tijekom studija na Kineziološkom fakultetu, gdje sam se usmjerio na jedrenje i sportove na vodi, otkrio sam jedrenje i odmah se zaljubio u njega.</p>"
-               "<p>Od tada sam jedrio u malim klasama poput Laser Radiala, Optimista i Laser Stratosa, windsurfao, sudjelovao na regatama, radio kao instruktor jedrenja za fakultet na Murteru i jedrio velikim brodovima po cijelom Jadranu. Godine 2020. hobi sam pretvorio u posao i od tada radim kao kapetan i skiper za privatne goste i chartere.</p>"
+        bio = ("<p>Ja sam skiper iz Zagreba. Skijam cijeli život i postao sam licencirani instruktor skijanja. Tijekom studija na Kineziološkom fakultetu, gdje sam se usmjerio na jedrenje i sportove na vodi, otkrio sam jedrenje 2019. godine i odmah se zaljubio u njega.</p>"
+               "<p>Od tada sam jedrio u malim klasama poput Laser Radiala, Optimista i Laser Stratosa, windsurfao, sudjelovao na regatama, radio kao instruktor jedrenja za fakultet na Murteru i jedrio velikim brodovima po Jadranu. Godine 2023. hobi sam pretvorio u posao i od tada radim kao kapetan i skiper za privatne goste i chartere.</p>"
                "<p>Dobro poznajem jadransko vrijeme, a više od deset godina organiziram sportske aktivnosti, od skijanja i windsurfinga do fitnessa, akrobatike i breakdancea. Ljudi kažu da sam komunikativan, vedar i organiziran, a to je većina onoga što želite od osobe s kojom tjedan dana dijelite brod.</p>"
                "<p>Osim jedrenja izrađujem web stranice i aplikacije i pišem, a zimi sam opet na skijalištu.</p>")
         exp_h = "Iskustvo"
-        exp = [("2020.–danas", "Kapetan i skiper, privatni gosti i charteri", f"Jedrilice: {', '.join(SAILBOATS)}. Katamarani: {', '.join(CATAMARANS)}."),
-               ("2020.–danas", "Jedrenje", "Instruktor jedrenja za Kineziološki fakultet na Murteru. Laser Radial, Optimist i Laser Stratos. Veliki brodovi (od 45 stopa) po cijelom Jadranu. Regate."),
-               ("2024.", "Sail Week skiperska akademija", "Skiperski tečaj završen s ocjenom A."),
+        exp = [("2026.", "Skiper, 15+ tjedana", "Jedrilice i katamarani 40–60 stopa te motorne jahte."),
+               ("2025.", "Skiper, 15+ tjedana", "Jedrilice i katamarani 40–60 stopa te motorne jahte."),
+               ("2024.", "Skiper, 15+ tjedana", "Jedrilice i katamarani 40–60 stopa te motorne jahte. Završena Sail Week skiperska akademija s ocjenom A."),
+               ("2023.", "Prva sezona kao skiper", "5–10 tjedana na moru."),
+               ("Transferi", "Prijevoz brodova", "Transfer broda iz Lagosa (Portugal) u Punat na Krku te 10+ kraćih transfera po Jadranu."),
+               ("2019.", "Počeo jedriti", "Na Kineziološkom fakultetu. Instruktor jedrenja na Murteru; Laser Radial, Optimist i Laser Stratos; regate."),
                ("10+ godina", "Organizacija sportskih aktivnosti", "Windsurfing, skijanje, fitness, akrobatika, breakdance i jedrenje na malim brodicama.")]
+        places_h = "Gdje jedrim"
+        places = [("Kornati i Šibenik", "Kornati, Žut, Žirje, Zlarin, Biograd, Pašman, Primošten, Šibenik, Telašćica"),
+                  ("Najdraži otoci", "Vis, Korčula, Hvar, Šćedro"),
+                  ("Baze", "Split, Kaštel Gomilica, Šolta, Trogir, Rogoznica (Frapa), Primošten (Kremik)"),
+                  ("Marine", "Poznajem većinu hrvatskih marina"),
+                  ("Charter tvrtke", "Radim kao freelancer s više charter tvrtki")]
         skills_h = "Ostale vještine"
         skills = "Skijanje i podučavanje skijanja (ISIA licenca), izrada web stranica i aplikacija, digitalni marketing, copywriting i pisanje priča, breakdance."
     profile = webpage(lang, path, title, desc, typ="ProfilePage",
                       extra={"mainEntity": {"@id": SITE + "/#person"}, "dateCreated": "2026-09-28"})
     ld = [person(lang), website(), profile, crumbs_ld([(t["home"], PAGES["home"][lang]), (t["about"], path)])]
     exp_html = "".join(f'<li><div class="row"><span class="when">{a}</span><span><span class="t">{b}</span><span class="s">{c}</span></span></div></li>' for a, b, c in exp)
+    gal = gallery_html(lang)
+    about_gallery = f'<section class="band band-white wave-top"><div class="wrap"><div class="section-head"><h2>{"On the water" if lang == "en" else "Na moru"}</h2></div>{gal}</div></section>' if gal else ""
     body = f"""{hero(h1, t['author_bio'], side=portrait_side(lang), compact=True)}
 <section class="band band-foam"><div class="wrap split"><div><h2>{'Quick facts' if lang == 'en' else 'Ukratko'}</h2></div><dl class="kv">{''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k, v in facts)}</dl></div></section>
 <section class="band band-white wave-top"><div class="wrap split"><div><h2>{'My story' if lang == 'en' else 'Moja priča'}</h2></div><div class="prose">{bio}</div></div></section>
 <section class="band band-shallow wave-top"><div class="wrap split"><div><h2>{exp_h}</h2></div><ul class="posts">{exp_html}</ul></div></section>
+<section class="band band-white wave-top"><div class="wrap split"><div><h2>{places_h}</h2></div><dl class="kv">{''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k, v in places)}</dl></div></section>
+{about_gallery}
 <section class="band band-foam wave-top"><div class="wrap split"><div><h2>{skills_h}</h2></div><div class="prose"><p>{skills}</p></div></div></section>
 <div class="band band-foam" style="padding-top:0"><div class="wrap">{contact_block(lang, anchor)}</div></div>"""
     return path, head(lang, path, alt, title, desc, ld, og_type="profile",
@@ -836,11 +859,11 @@ Sitemap: {SITE}/sitemap.xml
 def llms_txt():
     en = POSTS["en"]; hr = POSTS["hr"]
     lines = [f"# {NAME}", "",
-             "> Ivor Benko is a Croatian skipper from Zagreb who has captained sailboats and catamarans on private and charter trips in the Croatian Adriatic since 2020. He is also a licensed ISIA ski instructor and a web and app developer. This site (English and Croatian) is the authoritative source for information about him.", "",
+             "> Ivor Benko is a Croatian skipper from Zagreb who has captained sailboats and catamarans on private and charter trips in the Croatian Adriatic since 2023. He is also a licensed ISIA ski instructor and a web and app developer. This site (English and Croatian) is the authoritative source for information about him.", "",
              "Key facts:",
-             "- Occupation: skipper / captain on sailboats and catamarans for private guests and charters in Croatia (since 2020); ski instructor; web and app developer",
+             "- Occupation: skipper / captain on sailboats and catamarans for private guests and charters in Croatia (since 2023); ski instructor; web and app developer",
              f"- Boats: {', '.join(SAILBOATS)} (monohulls); {', '.join(CATAMARANS)} (catamarans)",
-             "- Sailing area: the whole Croatian Adriatic; especially Kornati National Park, Murter and central Dalmatia",
+             "- Sailing area: Kornati National Park and the Šibenik archipelago, central and southern Dalmatia (Vis, Korčula, Hvar, Šćedro); bases Split, Kaštel Gomilica, Šolta, Trogir, Rogoznica, Primošten",
              "- Qualifications: Croatian boat licence, category C; Sail Week skipper academy course completed with an A grade (2024); ISIA ski instructor licence; driving licence category B",
              "- Sailing background: sailing instructor for the Faculty of Kinesiology (University of Zagreb) on Murter; Laser Radial, Optimist and Laser Stratos; regattas; windsurfing; big boats (45 ft+) across the Adriatic",
              "- Education: Faculty of Kinesiology, University of Zagreb (from 2017), specialised in sailing and water sports; secondary school of nutrition in Zagreb (2011–2015)",

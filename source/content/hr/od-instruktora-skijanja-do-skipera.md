@@ -5,7 +5,7 @@ title: "Od instruktora skijanja do skipera: kako sam završio na moru"
 description: Ivor Benko o tome kako su ga skijanje, studij kineziologije u Zagrebu i posao instruktora jedrenja na Murteru doveli do posla skipera na jedrilicama i katamaranima u Hrvatskoj.
 date: 2026-09-28
 category: sailing
-summary: Ivor Benko je hrvatski skiper iz Zagreba. Odrastao je na skijama, postao licencirani ISIA instruktor skijanja, jedrenje otkrio tijekom studija na Kineziološkom fakultetu u Zagrebu i od 2020. radi kao skiper na jedrilicama i katamaranima na Jadranu.
+summary: Ivor Benko je hrvatski skiper iz Zagreba. Odrastao je na skijama, postao licencirani ISIA instruktor skijanja, jedrenje otkrio tijekom studija na Kineziološkom fakultetu u Zagrebu i od 2023. radi kao skiper na jedrilicama i katamaranima na Jadranu.
 ---
 
 Ljudi me ponekad pitaju kako netko iz Zagreba, daleko od mora, postane skiper. Kod mene je put išao najprije preko planina.
@@ -28,7 +28,7 @@ Uslijedilo je puno vremena na vodi:
 
 ## Kako sam postao skiper
 
-U jednom trenutku hobi je postao posao. Od 2020. radim kao kapetan i skiper za privatne goste i chartere, na jedrilicama poput Bénéteau First 45, Bavaria 46 i Dufour 46 te na katamaranima poput Lagoon 42, Lagoon 450 i Lagoon 46.
+U jednom trenutku hobi je postao posao. Od 2023. radim kao kapetan i skiper za privatne goste i chartere, na jedrilicama poput Bénéteau First 45, Bavaria 46 i Dufour 46 te na katamaranima poput Lagoon 42, Lagoon 450 i Lagoon 46.
 
 Godine 2024. završio sam Sail Week skipersku akademiju s ocjenom A. Imam ispit za voditelja brodice kategorije C.
 

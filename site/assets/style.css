@@ -128,7 +128,7 @@ p{margin:0 0 1.1rem}
   @keyframes drift{from{background-position-x:0}to{background-position-x:-1440px}}
 }
 .hero-portrait{justify-self:center;position:relative}
-.hero-portrait img{width:clamp(13rem,26vw,19rem);aspect-ratio:1;border-radius:50%;object-fit:cover;background:#fff;box-shadow:0 0 0 6px rgba(242,169,0,.9),0 0 0 14px rgba(255,255,255,.12),0 24px 50px -10px rgba(0,0,0,.5)}
+.hero-portrait img{width:clamp(13rem,26vw,19rem);aspect-ratio:1;border-radius:50%;object-fit:cover;object-position:50% 32%;background:#fff;box-shadow:0 0 0 6px rgba(242,169,0,.9),0 0 0 14px rgba(255,255,255,.12),0 24px 50px -10px rgba(0,0,0,.5)}
 .hero-portrait .badge{position:absolute;right:-.5rem;bottom:1rem;background:var(--signal);color:var(--deep);font-family:var(--sans);font-weight:700;font-size:.85rem;padding:.45rem .9rem;border-radius:999px;box-shadow:var(--shadow)}
 .trust{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;margin:2rem 0 0;padding:0;list-style:none;font-family:var(--sans);font-size:.95rem;color:#CFE6EA}
 .trust li::before{content:"";display:inline-block;width:.5rem;height:.5rem;border-radius:50%;background:var(--signal);margin-right:.55rem;vertical-align:.08em}
@@ -222,9 +222,9 @@ p{margin:0 0 1.1rem}
 .posts .s{color:var(--muted);font-size:1.02rem;display:block;max-width:40rem}
 
 /* ---------- gallery ---------- */
-.gallery{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));margin:0;padding:0;list-style:none}
-.gallery li{border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3;background:var(--shallow)}
-.gallery img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.gallery{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fill,minmax(13rem,1fr));margin:0;padding:0;list-style:none}
+.gallery li{border-radius:var(--radius);overflow:hidden;aspect-ratio:3/4;background:var(--shallow)}
+.gallery img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;transition:transform .5s}
 .gallery li:hover img{transform:scale(1.05)}
 
 /* ---------- contact ---------- */
@@ -233,7 +233,7 @@ p{margin:0 0 1.1rem}
 .contact h2{color:#fff}
 .contact p{max-width:36rem}
 .contact a{color:#fff}
-.contact .portrait{width:9.5rem;height:9.5rem;border-radius:50%;object-fit:cover;background:#fff;box-shadow:0 0 0 4px var(--signal)}
+.contact .portrait{width:9.5rem;height:9.5rem;border-radius:50%;object-fit:cover;object-position:50% 32%;background:#fff;box-shadow:0 0 0 4px var(--signal)}
 .contact .kv{border-top-color:rgba(255,255,255,.5)}
 .contact .kv dt,.contact .kv dd{border-bottom-color:rgba(255,255,255,.15)}
 .contact .kv dt{color:#A9D3D9}

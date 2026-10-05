@@ -5,7 +5,7 @@ title: "From ski instructor to skipper: how I ended up at sea"
 description: Ivor Benko on how skiing, kinesiology studies in Zagreb and working as a sailing instructor on Murter led to a career as a skipper on sailboats and catamarans in Croatia.
 date: 2026-09-28
 category: sailing
-summary: Ivor Benko is a Croatian skipper from Zagreb. He grew up skiing, became a licensed ISIA ski instructor, discovered sailing while studying at the Faculty of Kinesiology in Zagreb, and has worked as a skipper on sailboats and catamarans in the Adriatic since 2020.
+summary: Ivor Benko is a Croatian skipper from Zagreb. He grew up skiing, became a licensed ISIA ski instructor, discovered sailing while studying at the Faculty of Kinesiology in Zagreb, and has worked as a skipper on sailboats and catamarans in the Adriatic since 2023.
 ---
 
 People sometimes ask how someone from Zagreb, far from the sea, ends up as a skipper. For me it went through the mountains first.
@@ -28,7 +28,7 @@ What followed was a lot of time on the water:
 
 ## Becoming a skipper
 
-At some point the hobby became a profession. Since 2020 I've worked as a captain and skipper for private guests and charters, on monohulls like the Bénéteau First 45, Bavaria 46 and Dufour 46, and on catamarans like the Lagoon 42, Lagoon 450 and Lagoon 46.
+At some point the hobby became a profession. Since 2023 I've worked as a captain and skipper for private guests and charters, on monohulls like the Bénéteau First 45, Bavaria 46 and Dufour 46, and on catamarans like the Lagoon 42, Lagoon 450 and Lagoon 46.
 
 In 2024 I completed the Sail Week skipper academy course with an A grade. I hold a Croatian boat licence (category C).
 
